@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Events Test</title>
+</head>
+<body>
+    <h1>Events JSON Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        async function testEvents() {
+            try {
+                console.log('Testing events.json loading...');
+                const timestamp = new Date().getTime();
+                const response = await fetch(`events.json?v=${timestamp}`);
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const events = await response.json();
+                console.log('Events loaded successfully:', events);
+                
+                document.getElementById('result').innerHTML = `
+                    <h2>✅ Events loaded successfully!</h2>
+                    <pre>${JSON.stringify(events, null, 2)}</pre>
+                `;
+            } catch (error) {
+                console.error('Error loading events:', error);
+                document.getElementById('result').innerHTML = `
+                    <h2>❌ Error loading events:</h2>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+        
+        // Run test when page loads
+        testEvents();
+    </script>
+</body>
+</html>
