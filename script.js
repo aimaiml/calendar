@@ -319,6 +319,29 @@ window.calendarAPI = {
     }
 };
 
+// Debug function to help troubleshoot
+window.debugEvents = function() {
+    console.log('=== DEBUG EVENTS ===');
+    console.log('Raw events:', events);
+    if (calendar) {
+        const calendarEvents = calendar.getEvents();
+        console.log('Calendar events:', calendarEvents);
+        calendarEvents.forEach(event => {
+            console.log('Event:', {
+                title: event.title,
+                start: event.start,
+                end: event.end,
+                allDay: event.allDay,
+                display: event.display
+            });
+        });
+    }
+    
+    // Force reload
+    console.log('Forcing events reload...');
+    loadEvents();
+};
+
 // Handle window resize for mobile optimization
 let resizeTimeout;
 window.addEventListener('resize', function() {
