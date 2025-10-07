@@ -13,17 +13,14 @@ async function loadEvents() {
     try {
         // Add timestamp to prevent caching issues
         const timestamp = new Date().getTime();
-        console.log('Loading events from:', `events.json?v=${timestamp}`);
         const response = await fetch(`events.json?v=${timestamp}`);
         if (!response.ok) {
             throw new Error('Failed to load events');
         }
         events = await response.json();
-        console.log('Events loaded:', events);
         
         // Process events and add color coding
         events = events.map(event => {
-            console.log('Processing event:', event);
             // Ensure multi-day events span correctly
             let processedEvent = {
                 title: event.title,
@@ -43,17 +40,14 @@ async function loadEvents() {
                 const endDate = new Date(event.end);
                 endDate.setDate(endDate.getDate() + 1);
                 processedEvent.end = endDate.toISOString().split('T')[0];
-                console.log('Multi-day event - Original end:', event.end, 'New end:', processedEvent.end);
             } else if (event.end && event.end === event.start) {
                 // Single day event
                 processedEvent.end = event.end;
             }
             
-            console.log('Final processed event:', processedEvent);
             return processedEvent;
         });
         
-        console.log('Final processed events:', events);
         initializeCalendar();
     } catch (error) {
         console.error('Error loading events:', error);
@@ -79,7 +73,6 @@ function getEventColor(type) {
 // Initialize FullCalendar
 function initializeCalendar() {
     const calendarEl = document.getElementById('calendar');
-    console.log('Initializing calendar with events:', events);
     
     calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -98,7 +91,6 @@ function initializeCalendar() {
         
         // Event handlers
         eventClick: function(info) {
-            console.log('Event clicked:', info.event);
             showEventDetails(info.event);
         },
         
@@ -118,12 +110,10 @@ function initializeCalendar() {
         // Date click handler
         dateClick: function(info) {
             // Could be used to add events in admin mode
-            console.log('Date clicked:', info.dateStr);
         },
         
         // Loading state
         loading: function(bool) {
-            console.log('Calendar loading state:', bool);
             if (bool) {
                 showLoadingState();
             } else {
@@ -133,7 +123,7 @@ function initializeCalendar() {
         
         // Add event render callback for debugging
         eventDidMount: function(info) {
-            console.log('Event rendered:', info.event.title, info.event.start);
+            // Event rendering complete
         },
         
         // Responsive breakpoints - Monthly view only
@@ -157,7 +147,6 @@ function initializeCalendar() {
     });
     
     calendar.render();
-    console.log('Calendar rendered');
     
     // Apply mobile-specific settings if needed
     if (window.innerWidth < 768) {
@@ -317,29 +306,6 @@ window.calendarAPI = {
             calendar.addEvent(event);
         }
     }
-};
-
-// Debug function to help troubleshoot
-window.debugEvents = function() {
-    console.log('=== DEBUG EVENTS ===');
-    console.log('Raw events:', events);
-    if (calendar) {
-        const calendarEvents = calendar.getEvents();
-        console.log('Calendar events:', calendarEvents);
-        calendarEvents.forEach(event => {
-            console.log('Event:', {
-                title: event.title,
-                start: event.start,
-                end: event.end,
-                allDay: event.allDay,
-                display: event.display
-            });
-        });
-    }
-    
-    // Force reload
-    console.log('Forcing events reload...');
-    loadEvents();
 };
 
 // Handle window resize for mobile optimization
