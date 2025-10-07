@@ -46,7 +46,9 @@ function checkPassword() {
 // Load events for admin panel
 async function loadAdminEvents() {
     try {
-        const response = await fetch('events.json');
+        // Add timestamp to prevent caching issues
+        const timestamp = new Date().getTime();
+        const response = await fetch(`events.json?v=${timestamp}`);
         if (!response.ok) {
             throw new Error('Failed to load events');
         }

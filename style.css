@@ -201,6 +201,52 @@ body {
     color: white !important;
 }
 
+/* Multi-day event styling */
+.fc-daygrid-event {
+    border-radius: 4px !important;
+    margin: 2px 1px !important;
+}
+
+.fc-daygrid-event.fc-event-start {
+    border-top-left-radius: 6px !important;
+    border-bottom-left-radius: 6px !important;
+    border-top-right-radius: 2px !important;
+    border-bottom-right-radius: 2px !important;
+    margin-left: 2px !important;
+}
+
+.fc-daygrid-event.fc-event-end {
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+    border-top-left-radius: 2px !important;
+    border-bottom-left-radius: 2px !important;
+    margin-right: 2px !important;
+}
+
+.fc-daygrid-event:not(.fc-event-start):not(.fc-event-end) {
+    border-radius: 2px !important;
+    margin: 2px 0 !important;
+}
+
+/* Make multi-day events more prominent */
+.fc-daygrid-event.fc-event-mirror {
+    opacity: 0.8 !important;
+}
+
+/* Highlight cells that contain events */
+.fc-daygrid-day.fc-day-past .fc-daygrid-event {
+    opacity: 0.8;
+}
+
+.fc-daygrid-day.fc-day-future .fc-daygrid-event {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fc-daygrid-day.fc-day-today .fc-daygrid-event {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    font-weight: 600 !important;
+}
+
 .fc-event-title {
     font-weight: 500 !important;
 }
