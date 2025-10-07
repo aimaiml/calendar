@@ -18,13 +18,26 @@ async function loadEvents() {
         events = await response.json();
         
         // Process events and add color coding
-        events = events.map(event => ({
-            ...event,
-            className: event.type || 'academic',
-            backgroundColor: getEventColor(event.type),
-            borderColor: getEventColor(event.type),
-            textColor: '#ffffff'
-        }));
+        events = events.map(event => {
+            // Ensure multi-day events span correctly
+            let processedEvent = {
+                ...event,
+                className: event.type || 'academic',
+                backgroundColor: getEventColor(event.type),
+                borderColor: getEventColor(event.type),
+                textColor: '#ffffff'
+            };
+            
+            // For multi-day events, ensure end date is inclusive
+            if (event.end && event.end !== event.start) {
+                // Add one day to end date to make it inclusive for FullCalendar
+                const endDate = new Date(event.end);
+                endDate.setDate(endDate.getDate() + 1);
+                processedEvent.end = endDate.toISOString().split('T')[0];
+            }
+            
+            return processedEvent;
+        });
         
         initializeCalendar();
     } catch (error) {

@@ -53,14 +53,26 @@ async function loadAdminEvents() {
         adminEvents = await response.json();
         
         // Process events for calendar display
-        const processedEvents = adminEvents.map(event => ({
-            ...event,
-            className: event.type || 'academic',
-            backgroundColor: getEventColor(event.type),
-            borderColor: getEventColor(event.type),
-            textColor: '#ffffff',
-            id: generateEventId(event) // Generate unique ID for editing
-        }));
+        const processedEvents = adminEvents.map(event => {
+            let processedEvent = {
+                ...event,
+                className: event.type || 'academic',
+                backgroundColor: getEventColor(event.type),
+                borderColor: getEventColor(event.type),
+                textColor: '#ffffff',
+                id: generateEventId(event) // Generate unique ID for editing
+            };
+            
+            // For multi-day events, ensure end date is inclusive
+            if (event.end && event.end !== event.start) {
+                // Add one day to end date to make it inclusive for FullCalendar
+                const endDate = new Date(event.end);
+                endDate.setDate(endDate.getDate() + 1);
+                processedEvent.end = endDate.toISOString().split('T')[0];
+            }
+            
+            return processedEvent;
+        });
         
         initializeAdminCalendar(processedEvents);
         updateEventsList();
@@ -193,6 +205,13 @@ function addEvent() {
         textColor: '#ffffff',
         id: generateEventId(newEvent)
     };
+    
+    // For multi-day events, ensure end date is inclusive for FullCalendar display
+    if (end && end !== start) {
+        const endDate = new Date(end);
+        endDate.setDate(endDate.getDate() + 1);
+        calendarEvent.end = endDate.toISOString().split('T')[0];
+    }
     
     adminCalendar.addEvent(calendarEvent);
     
@@ -569,6 +588,13 @@ function updateEvent() {
         textColor: '#ffffff',
         id: generateEventId(adminEvents[currentEditingEvent])
     };
+    
+    // For multi-day events, ensure end date is inclusive for FullCalendar display
+    if (end && end !== start) {
+        const endDate = new Date(end);
+        endDate.setDate(endDate.getDate() + 1);
+        updatedEvent.end = endDate.toISOString().split('T')[0];
+    }
     
     adminCalendar.addEvent(updatedEvent);
     
