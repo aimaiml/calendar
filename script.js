@@ -30,16 +30,22 @@ async function loadEvents() {
                 className: event.type || 'academic',
                 backgroundColor: getEventColor(event.type),
                 borderColor: getEventColor(event.type),
-                textColor: '#ffffff'
+                textColor: '#ffffff',
+                allDay: true // Ensure it's treated as all-day event
             };
             
             // For multi-day events, ensure end date includes the final day
             if (event.end && event.end !== event.start) {
-                // FullCalendar expects end date to be the day AFTER the last day
-                const endDate = new Date(event.end + 'T00:00:00');
+                // FullCalendar expects end date to be the day AFTER the last day for all-day events
+                const endDate = new Date(event.end);
                 endDate.setDate(endDate.getDate() + 1);
                 processedEvent.end = endDate.toISOString().split('T')[0];
-                console.log('Multi-day event processed:', processedEvent);
+                console.log('Multi-day event processed:', {
+                    original: event,
+                    processed: processedEvent,
+                    originalEnd: event.end,
+                    newEnd: processedEvent.end
+                });
             }
             
             return processedEvent;
