@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Calendar</title>
+    
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="department-title">AIML Department Calendar</h1>
+                <p class="academic-year">Academic Year 2025-26</p>
+            </div>
+        </header>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-color academic"></span>
+                <span class="legend-text">Academic Activities</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color co-curricular"></span>
+                <span class="legend-text">Co-curricular Activities</span>
+            </div>
+        </div>
+
+        <!-- Calendar Container -->
+        <div class="calendar-container">
+            <div id="calendar"></div>
+        </div>
+
+        <!-- Event Details Modal -->
+        <div id="eventModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="modal-header">
+                    <h2 id="modalTitle"></h2>
+                    <span id="modalType" class="event-type-badge"></span>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                    <p><strong>Description:</strong></p>
+                    <div id="modalDescription"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Department Calendar</p>
+        </footer>
+    </div>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

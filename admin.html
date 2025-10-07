@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Department Calendar</title>
+    
+    <!-- FullCalendar CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.css" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container admin-container">
+        <!-- Header -->
+        <header class="header admin-header">
+            <div class="header-content">
+                <h1 class="department-title">🔒 Admin Panel</h1>
+                <p class="academic-year">Department Calendar Management</p>
+            </div>
+        </header>
+
+        <!-- Password Protection -->
+        <div id="passwordScreen" class="form-container">
+            <h2 class="form-title">🔐 Admin Access Required</h2>
+            <div class="form-group">
+                <label for="adminPassword">Enter Admin Password:</label>
+                <input type="password" id="adminPassword" placeholder="Enter password">
+            </div>
+            <div class="form-actions">
+                <button onclick="checkPassword()" class="btn btn-primary">Access Admin Panel</button>
+            </div>
+            <p style="text-align: center; margin-top: 1rem; color: #6b7280; font-size: 0.9rem;">
+                Default password: <code>admin123</code>
+            </p>
+        </div>
+
+        <!-- Admin Content (Hidden by default) -->
+        <div id="adminContent" style="display: none;">
+            <!-- Event Form -->
+            <div class="form-container">
+                <h2 class="form-title">📅 Add New Event</h2>
+                <form id="eventForm">
+                    <div class="form-group">
+                        <label for="eventTitle">Event Title *</label>
+                        <input type="text" id="eventTitle" required placeholder="e.g., Mid-Sem Exams">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventStart">Start Date *</label>
+                        <input type="date" id="eventStart" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventEnd">End Date</label>
+                        <input type="date" id="eventEnd" placeholder="Leave empty for single-day event">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventType">Event Type *</label>
+                        <select id="eventType" required>
+                            <option value="">Select Event Type</option>
+                            <option value="academic">📚 Academic</option>
+                            <option value="co-curricular">🎯 Co-curricular</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" placeholder="Enter event details..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Add Event</button>
+                        <button type="button" onclick="clearForm()" class="btn btn-secondary">Clear Form</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Events List -->
+            <div class="form-container">
+                <h2 class="form-title">📋 Current Events</h2>
+                <div id="eventsList" class="events-list">
+                    <!-- Events will be populated here -->
+                </div>
+                <div class="form-actions" style="margin-top: 1rem;">
+                    <button onclick="refreshEventsList()" class="btn btn-secondary">🔄 Refresh List</button>
+                    <button onclick="generateJSON()" class="btn btn-success">📄 Generate JSON</button>
+                </div>
+            </div>
+
+            <!-- JSON Output -->
+            <div class="form-container" id="jsonContainer" style="display: none;">
+                <h2 class="form-title">📝 Generated events.json</h2>
+                <p style="color: #6b7280; margin-bottom: 1rem;">
+                    Copy the content below and replace the content in your <code>events.json</code> file:
+                </p>
+                <div id="jsonOutput" class="json-output"></div>
+                <div class="form-actions" style="margin-top: 1rem;">
+                    <button onclick="copyJSON()" class="btn btn-primary">📋 Copy JSON</button>
+                    <button onclick="downloadJSON()" class="btn btn-secondary">💾 Download JSON</button>
+                    <button onclick="hideJSON()" class="btn btn-secondary">❌ Close</button>
+                </div>
+            </div>
+
+            <!-- Preview Calendar -->
+            <div class="form-container">
+                <h2 class="form-title">📅 Preview Calendar</h2>
+                <div class="legend">
+                    <div class="legend-item">
+                        <span class="legend-color academic"></span>
+                        <span class="legend-text">Academic Activities</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-color co-curricular"></span>
+                        <span class="legend-text">Co-curricular Activities</span>
+                    </div>
+                </div>
+                <div class="calendar-container">
+                    <div id="adminCalendar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Event Details Modal -->
+        <div id="eventModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <div class="modal-header">
+                    <h2 id="modalTitle"></h2>
+                    <span id="modalType" class="event-type-badge"></span>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                    <p><strong>Description:</strong></p>
+                    <div id="modalDescription"></div>
+                    <div class="modal-actions" style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                        <button onclick="editEvent()" class="btn btn-primary btn-small">✏️ Edit</button>
+                        <button onclick="deleteEvent()" class="btn btn-secondary btn-small">🗑️ Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 Department Calendar Admin Panel | Keep this URL private</p>
+        </footer>
+    </div>
+
+    <!-- FullCalendar JS -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    
+    <!-- Admin JavaScript -->
+    <script src="admin.js"></script>
+</body>
+</html>
