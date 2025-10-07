@@ -79,11 +79,21 @@ function initializeCalendar() {
         height: 'auto',
         events: events,
         
-        // Header toolbar configuration - Monthly view only
+        // Header toolbar configuration with custom view toggle
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: '' // Remove week/day view buttons
+            right: 'viewToggle' // Custom toggle button
+        },
+        
+        // Custom buttons
+        customButtons: {
+            viewToggle: {
+                text: 'Year',
+                click: function() {
+                    toggleView();
+                }
+            }
         },
         
         // Responsive behavior - Monthly view only
@@ -112,6 +122,12 @@ function initializeCalendar() {
             // Could be used to add events in admin mode
         },
         
+        // View change handler to update button text
+        viewDidMount: function(info) {
+            const buttonText = info.view.type === 'dayGridMonth' ? 'Year' : 'Month';
+            updateToggleButton(buttonText);
+        },
+        
         // Loading state
         loading: function(bool) {
             if (bool) {
@@ -126,23 +142,9 @@ function initializeCalendar() {
             // Event rendering complete
         },
         
-        // Responsive breakpoints - Monthly view only
+        // Responsive breakpoints with custom toggle button
         windowResize: function() {
-            if (window.innerWidth < 768) {
-                calendar.setOption('aspectRatio', 1.0);
-                calendar.setOption('headerToolbar', {
-                    left: 'prev,next',
-                    center: 'title',
-                    right: 'today'
-                });
-            } else {
-                calendar.setOption('aspectRatio', 1.35);
-                calendar.setOption('headerToolbar', {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: ''
-                });
-            }
+            updateHeaderToolbar();
         }
     });
     
@@ -158,11 +160,61 @@ function initializeCalendar() {
 function applyMobileSettings() {
     if (calendar) {
         calendar.setOption('aspectRatio', 1.0);
-        calendar.setOption('headerToolbar', {
-            left: 'prev,next',
-            center: 'title',
-            right: 'today'
+        updateHeaderToolbar();
+    }
+}
+
+// Toggle between month and year view
+function toggleView() {
+    if (calendar) {
+        const currentView = calendar.view.type;
+        if (currentView === 'dayGridMonth') {
+            calendar.changeView('dayGridYear');
+            updateToggleButton('Month');
+        } else {
+            calendar.changeView('dayGridMonth');
+            updateToggleButton('Year');
+        }
+    }
+}
+
+// Update the toggle button text
+function updateToggleButton(text) {
+    if (calendar) {
+        calendar.setOption('customButtons', {
+            viewToggle: {
+                text: text,
+                click: function() {
+                    toggleView();
+                }
+            }
         });
+    }
+}
+
+// Update header toolbar based on screen size and current view
+function updateHeaderToolbar() {
+    if (calendar) {
+        const currentView = calendar.view.type;
+        const buttonText = currentView === 'dayGridMonth' ? 'Year' : 'Month';
+        
+        if (window.innerWidth < 768) {
+            calendar.setOption('aspectRatio', 1.0);
+            calendar.setOption('headerToolbar', {
+                left: 'prev,next',
+                center: 'title',
+                right: 'today,viewToggle'
+            });
+        } else {
+            calendar.setOption('aspectRatio', 1.35);
+            calendar.setOption('headerToolbar', {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'viewToggle'
+            });
+        }
+        
+        updateToggleButton(buttonText);
     }
 }
 

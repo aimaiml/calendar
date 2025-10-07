@@ -155,6 +155,22 @@ body {
     border-color: #4338ca !important;
 }
 
+/* Year view button styling */
+.fc-dayGridYear-button, .fc-viewToggle-button {
+    background-color: #059669 !important;
+    border-color: #059669 !important;
+    color: white !important;
+}
+
+.fc-dayGridYear-button:hover, .fc-viewToggle-button:hover {
+    background-color: #047857 !important;
+    border-color: #047857 !important;
+}
+
+.fc-dayGridYear-button:focus, .fc-viewToggle-button:focus {
+    box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.2) !important;
+}
+
 .fc-daygrid-day {
     min-height: 120px;
 }
@@ -172,6 +188,26 @@ body {
 .fc-day-today .fc-daygrid-day-number {
     color: #d97706 !important;
     font-weight: 700;
+}
+
+/* Year View Specific Styles */
+.fc-dayGridYear-view {
+    font-size: 0.75rem;
+}
+
+.fc-dayGridYear-view .fc-daygrid-day {
+    min-height: 60px;
+}
+
+.fc-dayGridYear-view .fc-daygrid-day-number {
+    font-size: 0.7rem;
+    padding: 0.2rem;
+}
+
+.fc-dayGridYear-view .fc-event {
+    font-size: 0.6rem !important;
+    padding: 1px 3px !important;
+    margin: 0.5px 0 !important;
 }
 
 /* Event Styles */
@@ -199,52 +235,6 @@ body {
 .fc-event.co-curricular {
     background-color: #16a34a !important;
     color: white !important;
-}
-
-/* Multi-day event styling */
-.fc-daygrid-event {
-    border-radius: 4px !important;
-    margin: 2px 1px !important;
-}
-
-.fc-daygrid-event.fc-event-start {
-    border-top-left-radius: 6px !important;
-    border-bottom-left-radius: 6px !important;
-    border-top-right-radius: 2px !important;
-    border-bottom-right-radius: 2px !important;
-    margin-left: 2px !important;
-}
-
-.fc-daygrid-event.fc-event-end {
-    border-top-right-radius: 6px !important;
-    border-bottom-right-radius: 6px !important;
-    border-top-left-radius: 2px !important;
-    border-bottom-left-radius: 2px !important;
-    margin-right: 2px !important;
-}
-
-.fc-daygrid-event:not(.fc-event-start):not(.fc-event-end) {
-    border-radius: 2px !important;
-    margin: 2px 0 !important;
-}
-
-/* Make multi-day events more prominent */
-.fc-daygrid-event.fc-event-mirror {
-    opacity: 0.8 !important;
-}
-
-/* Highlight cells that contain events */
-.fc-daygrid-day.fc-day-past .fc-daygrid-event {
-    opacity: 0.8;
-}
-
-.fc-daygrid-day.fc-day-future .fc-daygrid-event {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.fc-daygrid-day.fc-day-today .fc-daygrid-event {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    font-weight: 600 !important;
 }
 
 .fc-event-title {
