@@ -28,10 +28,10 @@ async function loadEvents() {
                 textColor: '#ffffff'
             };
             
-            // For multi-day events, ensure end date is inclusive
+            // For multi-day events, ensure end date includes the final day
             if (event.end && event.end !== event.start) {
-                // Add one day to end date to make it inclusive for FullCalendar
-                const endDate = new Date(event.end);
+                // FullCalendar expects end date to be the day AFTER the last day
+                const endDate = new Date(event.end + 'T00:00:00');
                 endDate.setDate(endDate.getDate() + 1);
                 processedEvent.end = endDate.toISOString().split('T')[0];
             }
@@ -70,14 +70,14 @@ function initializeCalendar() {
         height: 'auto',
         events: events,
         
-        // Header toolbar configuration
+        // Header toolbar configuration - Monthly view only
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            right: '' // Remove week/day view buttons
         },
         
-        // Responsive behavior
+        // Responsive behavior - Monthly view only
         aspectRatio: window.innerWidth < 768 ? 1.0 : 1.35,
         
         // Event handlers
@@ -113,7 +113,7 @@ function initializeCalendar() {
             }
         },
         
-        // Responsive breakpoints
+        // Responsive breakpoints - Monthly view only
         windowResize: function() {
             if (window.innerWidth < 768) {
                 calendar.setOption('aspectRatio', 1.0);
@@ -127,7 +127,7 @@ function initializeCalendar() {
                 calendar.setOption('headerToolbar', {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                    right: ''
                 });
             }
         }
@@ -149,33 +149,6 @@ function applyMobileSettings() {
             left: 'prev,next',
             center: 'title',
             right: 'today'
-        });
-        
-        // Add view toggle for mobile
-        setTimeout(() => {
-            addMobileViewToggle();
-        }, 100);
-    }
-}
-
-// Add mobile view toggle
-function addMobileViewToggle() {
-    const toolbar = document.querySelector('.fc-toolbar');
-    if (toolbar && window.innerWidth < 768) {
-        const viewToggle = document.createElement('div');
-        viewToggle.className = 'mobile-view-toggle';
-        viewToggle.innerHTML = `
-            <select id="mobileViewSelect" class="mobile-view-select">
-                <option value="dayGridMonth">Month</option>
-                <option value="timeGridWeek">Week</option>
-                <option value="timeGridDay">Day</option>
-            </select>
-        `;
-        
-        toolbar.appendChild(viewToggle);
-        
-        document.getElementById('mobileViewSelect').addEventListener('change', function(e) {
-            calendar.changeView(e.target.value);
         });
     }
 }

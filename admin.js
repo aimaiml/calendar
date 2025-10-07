@@ -63,10 +63,10 @@ async function loadAdminEvents() {
                 id: generateEventId(event) // Generate unique ID for editing
             };
             
-            // For multi-day events, ensure end date is inclusive
+            // For multi-day events, ensure end date includes the final day
             if (event.end && event.end !== event.start) {
-                // Add one day to end date to make it inclusive for FullCalendar
-                const endDate = new Date(event.end);
+                // FullCalendar expects end date to be the day AFTER the last day
+                const endDate = new Date(event.end + 'T00:00:00');
                 endDate.setDate(endDate.getDate() + 1);
                 processedEvent.end = endDate.toISOString().split('T')[0];
             }
@@ -111,10 +111,11 @@ function initializeAdminCalendar(events) {
         height: 'auto',
         events: events,
         
+        // Header toolbar - Monthly view only
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek'
+            right: '' // Remove week/day views
         },
         
         aspectRatio: window.innerWidth < 768 ? 1.0 : 1.35,
@@ -206,9 +207,9 @@ function addEvent() {
         id: generateEventId(newEvent)
     };
     
-    // For multi-day events, ensure end date is inclusive for FullCalendar display
+    // For multi-day events, ensure end date includes the final day for FullCalendar display
     if (end && end !== start) {
-        const endDate = new Date(end);
+        const endDate = new Date(end + 'T00:00:00');
         endDate.setDate(endDate.getDate() + 1);
         calendarEvent.end = endDate.toISOString().split('T')[0];
     }
@@ -589,9 +590,9 @@ function updateEvent() {
         id: generateEventId(adminEvents[currentEditingEvent])
     };
     
-    // For multi-day events, ensure end date is inclusive for FullCalendar display
+    // For multi-day events, ensure end date includes the final day for FullCalendar display
     if (end && end !== start) {
-        const endDate = new Date(end);
+        const endDate = new Date(end + 'T00:00:00');
         endDate.setDate(endDate.getDate() + 1);
         updatedEvent.end = endDate.toISOString().split('T')[0];
     }
